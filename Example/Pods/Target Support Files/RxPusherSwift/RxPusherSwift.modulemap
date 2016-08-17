@@ -1,0 +1,6 @@
+framework module RxPusherSwift {
+  umbrella header "RxPusherSwift-umbrella.h"
+
+  export *
+  module * { export * }
+}
