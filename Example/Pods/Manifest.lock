@@ -1,14 +1,14 @@
 PODS:
   - Nimble (3.2.0)
-  - PusherSwift (2.0.1)
+  - PusherSwift (3.1.0)
   - Quick (0.9.3)
-  - RxCocoa (2.6.0):
-    - RxSwift (~> 2.5)
-  - RxPusherSwift (0.1.0):
-    - PusherSwift (~> 2.0)
-    - RxCocoa (~> 2.6)
-    - RxSwift (~> 2.6)
-  - RxSwift (2.6.0)
+  - RxCocoa (3.0.0-beta.1):
+    - RxSwift (~> 3.0.0-beta.1)
+  - RxPusherSwift (0.1.1):
+    - PusherSwift
+    - RxCocoa (~> 3.0.0.beta.1)
+    - RxSwift (~> 3.0.0.beta.1)
+  - RxSwift (3.0.0-beta.1)
 
 DEPENDENCIES:
   - Nimble (~> 3.0)
@@ -21,12 +21,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Nimble: 703854335d181df169bbca9c97117b5cf8c47c1d
-  PusherSwift: 81b5305973c641f9b3754662ba21d1cbcd932c9a
+  PusherSwift: fe8f25eb234351fc46748fbba8760bd04e7f2746
   Quick: 13a2a2b19a5d8e3ed4fd0c36ee46597fd77ebf71
-  RxCocoa: 89ab00d5753502520227940e3a0e0a0413683c6b
-  RxPusherSwift: ea088a8cacdf520aea2c0743037be4fb89f4f354
-  RxSwift: 77f3a0b15324baa7a1c9bfa9f199648a82424e26
+  RxCocoa: 8cecf331302b8ae5381bbab1bccba4ede2eae6a8
+  RxPusherSwift: 91df59774c073b0249377765c9b81834509f980c
+  RxSwift: 0823e8d7969c23bfa9ddfb2afa4881e424a1a710
 
 PODFILE CHECKSUM: b505376a38d0e4703825ecdbd3723d60bda88adb
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.0.rc.2

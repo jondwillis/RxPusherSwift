@@ -23,14 +23,14 @@ class ViewController: UIViewController {
     var pusher: Pusher!
     var channelObservable: Observable<PusherChannel>!
     
-    @IBAction func connectAction(sender: AnyObject) {
+    @IBAction func connectAction(_ sender: AnyObject) {
         self.pusher.connect()
     }
     
-    @IBAction func triggerEventAction(sender: AnyObject) {
+    @IBAction func triggerEventAction(_ sender: AnyObject) {
         self.channelObservable
             .take(1)
-            .subscribeNext { $0.trigger("exampleEvent", data: "thing") }
+            .subscribe(onNext: { $0.trigger(eventName: "exampleEvent", data: "thing") })
             .addDisposableTo(disposeBag)
     }
     
@@ -41,9 +41,10 @@ class ViewController: UIViewController {
         
         self.pusher
             .connection
-            .rx_connectionState
+            .rx
+            .connectionState
             .map { "\($0.new)" }
-            .bindTo(self.connectionStateLabel.rx_text)
+            .bindTo(self.connectionStateLabel.rx.text)
             .addDisposableTo(self.disposeBag)
         
         let channelObservable = pusher
@@ -53,14 +54,14 @@ class ViewController: UIViewController {
         channelObservable
             .flatMapLatest { channel in channel.rx_bind("exampleEvent") }
             .map { "\($0)" }
-            .bindTo(self.lastMessageLabel.rx_text)
+            .bindTo(self.lastMessageLabel.rx.text)
             .addDisposableTo(disposeBag)
         
         self.channelObservable = channelObservable.asObservable()
         channelObservable.connect().addDisposableTo(disposeBag)
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.disposeBag = nil
     }

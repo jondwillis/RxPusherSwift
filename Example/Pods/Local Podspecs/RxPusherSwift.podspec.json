@@ -1,6 +1,6 @@
 {
   "name": "RxPusherSwift",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "summary": "Rx wrapper for PusherSwift",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/jondwillis/RxPusherSwift",
@@ -13,24 +13,23 @@
   },
   "source": {
     "git": "https://github.com/jondwillis/RxPusherSwift.git",
-    "tag": "0.1.0"
+    "tag": "0.1.1"
   },
   "platforms": {
     "ios": "8.0",
     "osx": "10.9",
-    "watchos": "2.0",
     "tvos": "9.0"
   },
   "source_files": "RxPusherSwift/Classes/**/*",
   "dependencies": {
     "PusherSwift": [
-      "~> 2.0"
+
     ],
     "RxSwift": [
-      "~> 2.6"
+      "~> 3.0.0.beta.1"
     ],
     "RxCocoa": [
-      "~> 2.6"
+      "~> 3.0.0.beta.1"
     ]
   }
 }

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'RxPusherSwift'
-  s.version          = '0.1.0'
+  s.version          = '0.2.0'
   s.summary          = 'Rx wrapper for PusherSwift'
 
 # This description is used to generate tags and improve search results.
@@ -34,14 +34,14 @@ TODO: Add long description of the pod here.
 
 
   s.source_files = 'RxPusherSwift/Classes/**/*'
-  
+
   # s.resource_bundles = {
   #   'RxPusherSwift' => ['RxPusherSwift/Assets/*.png']
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'PusherSwift', '~> 2.0'
-  s.dependency 'RxSwift', '~> 2.6'
-  s.dependency 'RxCocoa', '~> 2.6'
+  s.dependency 'PusherSwift'
+  s.dependency 'RxSwift', '~> 3.0.0.beta.1'
+  s.dependency 'RxCocoa', '~> 3.0.0.beta.1'
 end

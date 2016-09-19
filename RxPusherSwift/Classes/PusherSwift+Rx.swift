@@ -17,13 +17,13 @@ import PusherSwift
 
 public typealias RxPusherConnectionState = (old: ConnectionState, new: ConnectionState)
 
-public class RxPusherConnectionStateChangeDelegateProxy: DelegateProxy,
-    ConnectionStateChangeDelegate,
+open class RxPusherConnectionStateChangeDelegateProxy: DelegateProxy,
+    PusherConnectionDelegate,
 DelegateProxyType {
     /**
      Typed parent object.
      */
-    public weak private(set) var pusherConnection: PusherConnection?
+    open weak fileprivate(set) var pusherConnection: PusherConnection?
     
     /**
      Initializes `RxScrollViewDelegateProxy`
@@ -35,30 +35,30 @@ DelegateProxyType {
         super.init(parentObject: parentObject)
     }
     
-    public class func currentDelegateFor(object: AnyObject) -> AnyObject? {
+    open class func currentDelegateFor(_ object: AnyObject) -> AnyObject? {
         let pusherConnection: PusherConnection = object as! PusherConnection
-        return pusherConnection.stateChangeDelegate
+        return pusherConnection.delegate
     }
     
-    public class func setCurrentDelegate(delegate: AnyObject?, toObject object: AnyObject) {
+    open class func setCurrentDelegate(_ delegate: AnyObject?, toObject object: AnyObject) {
         let pusherConnection: PusherConnection = object as! PusherConnection
-        pusherConnection.stateChangeDelegate = delegate as? ConnectionStateChangeDelegate
+        pusherConnection.delegate = delegate as? PusherConnectionDelegate
     }
     
-    private var _connectionStateSubject: ReplaySubject<RxPusherConnectionState>?
+    fileprivate var _connectionStateSubject: ReplaySubject<RxPusherConnectionState>?
     
     internal var connectionStateSubject: ReplaySubject<RxPusherConnectionState> {
         if _connectionStateSubject == nil {
             let subject = ReplaySubject<RxPusherConnectionState>.create(bufferSize: 1)
             _connectionStateSubject = subject
-            let state = self.pusherConnection?.connectionState ?? ConnectionState.Disconnected
+            let state = self.pusherConnection?.connectionState ?? ConnectionState.disconnected
             subject.onNext((state, new: state))
         }
         
         return _connectionStateSubject!
     }
     
-    public func connectionChange(old: ConnectionState, new: ConnectionState) {
+    open func connectionChange(_ old: ConnectionState, new: ConnectionState) {
         _connectionStateSubject?.onNext((old: old, new: new))
         //        (self._forwardToDelegate as? ConnectionStateChangeDelegate).connectionChange(old, new: new)
     }
@@ -70,25 +70,26 @@ DelegateProxyType {
     }
 }
 
-public extension PusherConnection {
-    public var rx_delegate: DelegateProxy {
+public extension Reactive where Base: PusherConnection {
+    
+    public var delegate: DelegateProxy {
         return RxPusherConnectionStateChangeDelegateProxy
             .proxyForObject(RxPusherConnectionStateChangeDelegateProxy.self)
     }
     
-    public var rx_connectionState: Observable<RxPusherConnectionState> {
-        let proxy = RxPusherConnectionStateChangeDelegateProxy.proxyForObject(self)
+    public var connectionState: Observable<RxPusherConnectionState> {
+        let proxy = RxPusherConnectionStateChangeDelegateProxy.proxyForObject(self as AnyObject)
         return proxy.connectionStateSubject.asObservable()
     }
 }
 
-public enum RxPusherSwiftError: ErrorType {
-    case WebSocketDisconnected
+public enum RxPusherSwiftError: Error {
+    case webSocketDisconnected
 }
 
 public extension Pusher {
     
-    public func rx_subscribe(channelName: String) -> Observable<PusherChannel> {
+    public func rx_subscribe(_ channelName: String) -> Observable<PusherChannel> {
         return Observable.create { observer in
             let pusherChannel = self.subscribe(channelName)
             observer.onNext(pusherChannel)
@@ -97,12 +98,13 @@ public extension Pusher {
             
             self
                 .connection
-                .rx_connectionState
+                .rx
+                .connectionState
                 .filter {
-                    ($0.new == ConnectionState.Reconnecting || $0.new == ConnectionState.Connecting)
+                    ($0.new == ConnectionState.reconnecting || $0.new == ConnectionState.connecting)
                 }
                 .skip(2)
-                .map { _ in RxPusherSwiftError.WebSocketDisconnected }
+                .map { _ in RxPusherSwiftError.webSocketDisconnected }
                 .subscribeNext { error in observer.onError(error) }
                 .addDisposableTo(dispose)
             
@@ -116,14 +118,14 @@ public extension Pusher {
 
 public extension PusherChannel {
     
-    public func rx_bind(eventName: String) -> Observable<AnyObject?> {
+    public func rx_bind(_ eventName: String) -> Observable<AnyObject?> {
         return Observable.create { observer in
-            let callbackId = self.bind(eventName, callback: { data in
-                observer.onNext(data)
+            let callbackId = self.bind(eventName: eventName, callback: { data in
+                observer.onNext(data as AnyObject?)
             })
             
             return AnonymousDisposable {
-                self.unbind(eventName, callbackId: callbackId)
+                self.unbind(eventName: eventName, callbackId: callbackId)
             }
         }
     }

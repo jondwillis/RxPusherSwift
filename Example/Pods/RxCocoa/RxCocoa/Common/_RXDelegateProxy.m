@@ -10,7 +10,9 @@
 #import "_RX.h"
 #import "_RXObjCRuntime.h"
 
-@interface _RXDelegateProxy ()
+@interface _RXDelegateProxy () {
+    id __weak __forwardToDelegate;
+}
 
 @property (nonatomic, strong) id strongForwardDelegate;
 
@@ -90,7 +92,11 @@ static NSMutableDictionary *forwardableSelectorsPerClass = nil;
     
 }
 
--(void)_setForwardToDelegate:(id)forwardToDelegate retainDelegate:(BOOL)retainDelegate {
+-(id)_forwardToDelegate {
+    return __forwardToDelegate;
+}
+
+-(void)_setForwardToDelegate:(id __nullable)forwardToDelegate retainDelegate:(BOOL)retainDelegate {
     __forwardToDelegate = forwardToDelegate;
     if (retainDelegate) {
         self.strongForwardDelegate = forwardToDelegate;
